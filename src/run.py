@@ -136,22 +136,28 @@ def evaluate(sess, evX, evY, X, Y, gen_loss, clf_loss, accuracy, n_batch, desc, 
 
 # naive sampler without caching
 def sample(sess, X, gen_logits, n_sub_batch, n_gpu, n_px, n_vocab, clusters, save_dir):
-    samples = np.zeros([n_gpu * n_sub_batch, n_px * n_px], dtype=np.int32)
 
-    for i in tqdm(range(n_px * n_px), ncols=80, leave=False):
+    samples = np.zeros([n_gpu * n_sub_batch, n_px * n_px], dtype=np.int32)
+    for k in range(n_sub_batch):
+        samples[k] = np.load("shi3z.npy")       # Load based image
+        samples[k,n_px*16:]=0                   # fill half of image by zero
+
+    for i in tqdm(range(n_px * 16,n_px * n_px), ncols=80, leave=False): # Predict half of image
         np_gen_logits = sess.run(gen_logits, {X: samples})
         for j in range(n_gpu):
             p = softmax(np_gen_logits[j][:, i, :], axis=-1)  # logits to probas
-            for k in range(n_sub_batch):
+            for k in range(1,n_sub_batch):
                 c = np.random.choice(n_vocab, p=p[k])  # choose based on probas
                 samples[j * n_sub_batch + k, i] = c
     
-    # dequantize
+    # Palletized image to RGB Image via CLUT
     samples = [np.reshape(np.rint(127.5 * (clusters[s] + 1.0)), [32, 32, 3]).astype(np.uint8) for s in samples]
 
-    # write to png
-    for i in range(n_gpu * n_sub_batch):
-        imwrite(f"{args.save_dir}/sample_{i}.png", samples[i])
+    # Write PNG 
+    samples = np.asarray(samples).reshape(32*n_sub_batch,32,3)
+    imwrite("result.png",samples)
+    #for i in range(n_gpu * n_sub_batch):
+    #    imwrite(f"{args.save_dir}/sample_{i}.png", samples[i])
 
 
 def main(args):
