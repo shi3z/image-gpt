@@ -6,6 +6,9 @@ The original version of image-gpt can be found at https://github.com/openai/imag
 This repo contains a some change from original code for experiment and visualizing images.
 Please install and download pre-trained model and color look up table following instruction.
 
+![result](https://github.com/shi3z/image-gpt/blob/master/result.png?raw=true)
+
+
 Supported Platforms:
 
 - Ubuntu 16.04
