@@ -54,7 +54,7 @@ Convert from shi3z.png to palette image.
 Please note, you need to make the image square before converting.
 
 ```
-python imgconv.py
+python src/imgconv.py
 ```
 Next, you can make sure the true power of image-gpt.
 
