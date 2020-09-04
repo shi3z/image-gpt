@@ -56,9 +56,6 @@ python download.py --model s --ckpt 1000000 --dataset imagenet --clusters --down
 Convert from shi3z.png to palette image.
 Please note, you need to make the image square before converting.
 
-![shi3z](https://github.com/shi3z/image-gpt/blob/master/shi3z.png?raw=true)
-shi3z.png
-
 ```
 python src/imgconv.py
 ```
